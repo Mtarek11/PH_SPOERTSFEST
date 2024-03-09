@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KPN4R+3eepldjCjpcNfG6WHegJ91Vm0LIm0zXErRSHJfsGmJDWfSCPUM1ay69IWHYIbXkyC975yBFV9DxXyqXQ==",
+  "dgSpecHash": "PxMkKSuL+0i2pzWF+UYxHTzyoICq2dXGaBb9CP1V6xHlyUuKNo2TRT8XDeidD8GWC1V0DzYI7FPRlq+vkAB/WA==",
   "success": true,
-  "projectFilePath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\PHRamadanOlympic_BackEnd\\Reposatiory\\Reposatiory.csproj",
+  "projectFilePath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\Reposatiory\\Reposatiory.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\moham\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\moham\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

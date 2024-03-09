@@ -3144,11 +3144,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\PHRamadanOlympic_BackEnd\\ViewModels\\ViewModels.csproj",
+      "projectUniqueName": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\ViewModels\\ViewModels.csproj",
       "projectName": "ViewModels",
-      "projectPath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\PHRamadanOlympic_BackEnd\\ViewModels\\ViewModels.csproj",
+      "projectPath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\ViewModels\\ViewModels.csproj",
       "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
-      "outputPath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\PHRamadanOlympic_BackEnd\\ViewModels\\obj\\",
+      "outputPath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\ViewModels\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -3165,8 +3165,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\PHRamadanOlympic_BackEnd\\Models\\Models.csproj": {
-              "projectPath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\PHRamadanOlympic_BackEnd\\Models\\Models.csproj"
+            "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\Models\\Models.csproj": {
+              "projectPath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\Models\\Models.csproj"
             }
           }
         }

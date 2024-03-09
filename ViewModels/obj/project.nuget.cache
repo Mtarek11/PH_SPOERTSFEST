@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Pqz6fZw7a7l89v1GYvQ7v/t9c61F8z8FfCrn9YUkno3WPAfK6P01+KUP7k1ANA0ng3aA7w++bQulznNs+DEuIw==",
+  "dgSpecHash": "wDjm3W7NXbDGYaiWc7nTM9nhbHLHkVC1OtxKES3ERVEFQH3sLP2/2hofFVyZ4hPmrNdMpgUniSTSJEmvhW0o8g==",
   "success": true,
-  "projectFilePath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\PHRamadanOlympic_BackEnd\\ViewModels\\ViewModels.csproj",
+  "projectFilePath": "D:\\Gresha work\\PHRamadanOlympic_BackEnd\\ViewModels\\ViewModels.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\moham\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\moham\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
