@@ -17,6 +17,21 @@ namespace WebApis
     public class TeamAndIndividualController(TeamManager _teamManager) : ControllerBase
     {
         private readonly TeamManager teamManager = _teamManager;
+        /// <summary>
+        /// Export all players to excell sheet
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ExportAllPlayersToExcellSheet")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(APIResult<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(APIResult<string>))]
+        public async Task<IActionResult> ExportPlayersToExcellSheetAsync()
+        {
+            APIResult<string> result = await teamManager.ExportAllPlayersToExcellAsync();
+            return new JsonResult(result)
+            {
+                StatusCode = result.StatusCode
+            };
+        }
         ///// <summary>
         ///// Print players cards
         ///// </summary>

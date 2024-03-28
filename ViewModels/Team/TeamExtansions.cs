@@ -44,5 +44,25 @@ namespace ViewModels
                 Name = team.Name != null ? team.Name : team.Players.Select(i => i.Name).FirstOrDefault()
             };
         }
+        public static TeamsViewModelForAdmin ToViewModelForAdmin(this Team team)
+        {
+            return new TeamsViewModelForAdmin()
+            {
+                TeamName = team.Name != null ? team.Name : "Individual",
+                Players = team.Players.Select(i => i.ToViewModelForAdmin()).ToList(),
+            };
+        }
+        public static PlayerViewModelForAdmin ToViewModelForAdmin(this Player player)
+        {
+            return new PlayerViewModelForAdmin
+            {
+                DateOfBirth = player.DateOfBirth.ToString("MMMM d, yyyy"),
+                Email = player.Email,
+                Gender = player.Gender,
+                Name = player.Name,
+                NationalId = player.NationalId,
+                PhoneNumber = player.PhoneNumber,
+            };
+        }
     }
 }

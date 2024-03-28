@@ -3,7 +3,11 @@ using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using System.Numerics;
+using OfficeOpenXml;
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Data;
 using ViewModels;
 
 namespace Reposatiory
@@ -13,6 +17,91 @@ namespace Reposatiory
         private readonly PlayerManager playerManager = _playerManager;
         private readonly UnitOfWork unitOfWork = _unitOfWork;
         string baseUrl = "Content/Images/";
+        private System.Drawing.Color GetTeamColor(string teamName)
+        {
+            int hashCode = teamName.GetHashCode();
+            Random random = new Random(hashCode);
+            return System.Drawing.Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
+        }
+        public async Task<APIResult<string>> ExportAllPlayersToExcellAsync()
+        {
+            APIResult<string> aPIResult = new();
+            try 
+            {
+                List<TeamsViewModelForAdmin> teams = await GetAll().Select(i => new TeamsViewModelForAdmin()
+                {
+                    Sport = i.Sport == Sport.FTM ? "Football Team, Males" : i.Sport == Sport.P ? "Padel" :
+                        i.Sport == Sport.BIF ? "Basketball Individual, Females" : i.Sport == Sport.BIM ? "Basketball Individual, Males" :
+                         i.Sport == Sport.BTF ? "Basketball Team, Females" : i.Sport == Sport.TS ? "Tennis Single" :
+                    i.Sport == Sport.TD ? "Tennis Double" : i.Sport == Sport.BTM ? "Basketball Team, Males" : "Football Team, Females",
+                    SportType = i.SportType == SportType.U18 ? "U 18" : i.SportType == SportType.TPC ? "3 point competition" :
+                    i.SportType == SportType.P45 ? "+45" : i.SportType == SportType.U12 ? "U 12" :
+                    i.SportType == SportType.U14 ? "U 14" : i.SportType == SportType.DC ? "Dunking competition" : "Open Age",
+                    TeamName = i.Name == null ? "Individual" : i.Name,
+                    Players = i.Players.Select(i => i.ToViewModelForAdmin()).ToList(),
+                }).ToListAsync();
+                using (var excelPackage = new ExcelPackage())
+                {
+                    var worksheet = excelPackage.Workbook.Worksheets.Add("Players");
+                    worksheet.Cells[1, 1].Value = "Sport";
+                    worksheet.Cells[1, 2].Value = "Sport Type";
+                    worksheet.Cells[1, 3].Value = "Team Name";
+                    worksheet.Cells[1, 4].Value = "Player Name";
+                    worksheet.Cells[1, 5].Value = "Date of Birth";
+                    worksheet.Cells[1, 6].Value = "Email";
+                    worksheet.Cells[1, 7].Value = "Gender";
+                    worksheet.Cells[1, 8].Value = "National ID";
+                    worksheet.Cells[1, 9].Value = "Phone Number";
+                    using (var range = worksheet.Cells["A1:I1"])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    }
+                    int row = 2;
+                    foreach (var team in teams)
+                    {
+                        worksheet.Cells[row, 1].Value = team.Sport;
+                        worksheet.Cells[row, 2].Value = team.SportType;
+                        worksheet.Cells[row, 3].Value = team.TeamName;
+                        using (var range = worksheet.Cells[row, 1, row, 9])
+                        {
+                            range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            range.Style.Fill.BackgroundColor.SetColor(GetTeamColor(team.TeamName));
+                        }
+                        foreach (var player in team.Players)
+                        {
+                            worksheet.Cells[row, 4].Value = player.Name;
+                            worksheet.Cells[row, 5].Value = player.DateOfBirth;
+                            worksheet.Cells[row, 6].Value = player.Email;
+                            worksheet.Cells[row, 7].Value = player.Gender;
+                            worksheet.Cells[row, 8].Value = player.NationalId;
+                            worksheet.Cells[row, 9].Value = player.PhoneNumber;
+                            row++;
+                        }
+                        row++;
+                    }
+                    string directoryPath = @"C:\Users\moham\OneDrive\Desktop"; 
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+                    string filePath = Path.Combine(directoryPath, "players.xlsx");
+                    FileInfo excelFile = new FileInfo(filePath);
+                    excelPackage.SaveAs(excelFile);
+                    aPIResult.Message = "File exported";
+                    aPIResult.IsSucceed = true;
+                    aPIResult.StatusCode = 200;
+                }
+            }
+            catch (Exception ex)
+            {
+                aPIResult.IsSucceed = false;
+                aPIResult.Message = ex.Message;
+                aPIResult.StatusCode = 400;
+            }
+            return aPIResult;
+        }
         public async Task<APIResult<string>> CreateTeamAsync(string teamName, Sport sport, SportType sportType, string userId, List<PlayerViewModel> players)
         {
             APIResult<string> aPIResult = new();
@@ -788,30 +877,30 @@ namespace Reposatiory
                 }
                 catch (DbUpdateException ex)
                 {
-                        string errorMessage = ex.InnerException.Message;
-                        if (errorMessage.Contains("'IX_Players_Email_Sport_SportType'"))
-                        {
-                            int startIndex = errorMessage.IndexOf('(') + 1;
-                            int endIndex = errorMessage.IndexOf(',', startIndex);
-                            string duplicateEmail = errorMessage.Substring(startIndex, endIndex - startIndex).Trim();
+                    string errorMessage = ex.InnerException.Message;
+                    if (errorMessage.Contains("'IX_Players_Email_Sport_SportType'"))
+                    {
+                        int startIndex = errorMessage.IndexOf('(') + 1;
+                        int endIndex = errorMessage.IndexOf(',', startIndex);
+                        string duplicateEmail = errorMessage.Substring(startIndex, endIndex - startIndex).Trim();
 
-                            aPIResult.Message = $"Email '{duplicateEmail}' already exists. Please choose a different email address.";
-                        }
-                        else if (errorMessage.Contains("'IX_Players_NationalId'"))
-                        {
-                            int startIndex = errorMessage.IndexOf('(') + 1;
-                            int endIndex = errorMessage.IndexOf(',', startIndex);
-                            string duplicateNationalId = errorMessage.Substring(startIndex, endIndex - startIndex).Trim();
+                        aPIResult.Message = $"Email '{duplicateEmail}' already exists. Please choose a different email address.";
+                    }
+                    else if (errorMessage.Contains("'IX_Players_NationalId'"))
+                    {
+                        int startIndex = errorMessage.IndexOf('(') + 1;
+                        int endIndex = errorMessage.IndexOf(',', startIndex);
+                        string duplicateNationalId = errorMessage.Substring(startIndex, endIndex - startIndex).Trim();
 
-                            aPIResult.Message = $"National ID '{duplicateNationalId}' already exists. Please choose a different one.";
-                        }
-                        else
-                        {
-                            aPIResult.Message = errorMessage;
-                        }
-                        aPIResult.IsSucceed = false;
-                        aPIResult.StatusCode = 400;
-                        return aPIResult;
+                        aPIResult.Message = $"National ID '{duplicateNationalId}' already exists. Please choose a different one.";
+                    }
+                    else
+                    {
+                        aPIResult.Message = errorMessage;
+                    }
+                    aPIResult.IsSucceed = false;
+                    aPIResult.StatusCode = 400;
+                    return aPIResult;
                 }
             }
             else

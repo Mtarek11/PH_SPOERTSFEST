@@ -56,6 +56,12 @@
             </summary>
             <param name="_teamManager"></param>
         </member>
+        <member name="M:WebApis.TeamAndIndividualController.ExportPlayersToExcellSheetAsync">
+            <summary>
+            Export all players to excell sheet
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:WebApis.TeamAndIndividualController.CreateTeamAsync(Models.Sport,Models.SportType,System.String,System.Collections.Generic.List{ViewModels.PlayerViewModel})">
             <summary>
             Create team ==> Sport type enum 1 for football, 2 for basketball, 3 for tennis, 4 for padel ==> neglect National id image url, personal image url and player id
